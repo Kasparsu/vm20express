@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="is-size-1">New Post</h1>
+    <form action="/posts/new" method="POST">
+        <input class="input mb-2" type="text" placeholder="Title" name="title">
+        <textarea class="textarea" placeholder="Write something cool..." rows="12" name="body"></textarea>
+        <input class="button is-primary" type="submit">
+    </form>
+{% endblock %}

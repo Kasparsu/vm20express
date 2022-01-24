@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Hello World!</h1>
+    <h1 class="is-size-1">Hello World!</h1>
     <form action="/greeting">
-        <input type="text" placeholder="Name" name="name">
-        <input type="number" placeholder="Age" name="age">
-        <input type="submit">
+        <input class="input mb-2" type="text" placeholder="Name" name="name">
+        <input class="input mb-2" type="number" placeholder="Age" name="age">
+        <input class="button is-primary" type="submit">
     </form>
 {% endblock %}
