@@ -26,3 +26,5 @@ function crypt(pass){
 function check(pass, hash){
     return bcrypt.compareSync(pass, hash);
 }
+
+module.exports = router;
