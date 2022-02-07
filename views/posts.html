@@ -13,6 +13,10 @@
                     {{post.body}}
                 </div>
             </div>
+            <footer class="card-footer">
+                <a href="/posts/{{loop.index0}}/edit" class="card-footer-item">Edit</a>
+                <a href="/posts/{{loop.index0}}/delete" class="card-footer-item">Delete</a>
+            </footer>
         </div>
     {% endfor %}
 {% endblock %}

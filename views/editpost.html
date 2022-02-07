@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="is-size-1">Edit post</h1>
+    <form action="/posts/{{post.id}}" method="POST">
+        <input class="input mb-2" type="text" placeholder="Title" name="title" value="{{post.title}}">
+        <textarea 
+        class="textarea"
+        placeholder="Write something cool..."
+        rows="12"
+        name="body">{{post.body}}</textarea>
+        <input class="button is-primary" type="submit">
+    </form>
+{% endblock %}
