@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="is-size-1">Login</h1>
+    <form action="/login" method="POST">
+        <input class="input mb-2" type="text" placeholder="Email" name="email">
+        <input class="input mb-2" type="password" placeholder="Password" name="password">
+        <input class="button is-primary" type="submit">
+    </form>
+{% endblock %}

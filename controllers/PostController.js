@@ -2,11 +2,17 @@ let express = require('express');
 let router  = express.Router();
 const path = require('path');
 const fs = require('fs');
+const DB = require('../database/db.js');
+const db = require('../database/db.js');
+
 
 router.get('/posts', (req, res) => {
-    let json = fs.readFileSync(path.join(__dirname, '../data/posts.json'));
-    let posts = JSON.parse(json);
-    res.render('posts.html', {posts}); // same as {posts: posts}
+    
+    let db = DB.getDB();
+    db.all('SELECT * FROM posts;', [], (err, results)=> {
+        res.render('posts.html', {posts:results});
+    });
+     // same as {posts: posts}
 });
   
 router.get('/posts/new', (req, res) => {
@@ -14,37 +20,37 @@ router.get('/posts/new', (req, res) => {
 });
   
 router.post('/posts/new', (req, res) => {
-    let json = fs.readFileSync(path.join(__dirname, '../data/posts.json'));
-    let posts = JSON.parse(json);
-    posts.push(req.body);
-    json = JSON.stringify(posts);
-    fs.writeFileSync(path.join(__dirname, '../data/posts.json'), json);
+    let db = DB.getDB();
+    db.run('INSERT INTO posts (title, body) VALUES ($title, $body);', {
+        $title: req.body.title,
+        $body: req.body.body
+    });
     res.redirect('/posts');
 });
   
 router.get('/posts/:id/edit', (req, res) => {
-    let json = fs.readFileSync(path.join(__dirname, '../data/posts.json'));
-    let posts = JSON.parse(json);
-    let post = posts[req.params.id];
-    post.id = req.params.id;
-    res.render('editpost.html', {post}); 
+    let db = DB.getDB();
+    db.get('SELECT * FROM posts WHERE id=?', req.params.id, (err, result) => {
+        res.render('editpost.html', {post:result}); 
+    });
+    
 });
   
 router.post('/posts/:id', (req, res) => {
-    let json = fs.readFileSync(path.join(__dirname, '../data/posts.json'));
-    let posts = JSON.parse(json);
-    posts[req.params.id] = req.body;
-    json = JSON.stringify(posts);
-    fs.writeFileSync(path.join(__dirname, '../data/posts.json'), json);
+    let db = DB.getDB();
+    db.run('UPDATE posts SET title=$title, body=$body WHERE id=$id', {
+        $title: req.body.title,
+        $body: req.body.body,
+        $id: req.params.id
+    });
     res.redirect('/posts');
 });
   
 router.get('/posts/:id/delete', (req, res) => {
-    let json = fs.readFileSync(path.join(__dirname, '../data/posts.json'));
-    let posts = JSON.parse(json);
-    posts.splice(req.params.id, 1);
-    json = JSON.stringify(posts);
-    fs.writeFileSync(path.join(__dirname, '../data/posts.json'), json);
+    let db = DB.getDB();
+    db.run('DELETE FROM posts WHERE id=$id', {
+        $id: req.params.id
+    });
     res.redirect('/posts');
 });
 
