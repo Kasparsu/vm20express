@@ -3,19 +3,18 @@ let router  = express.Router();
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path');
+const DB = require('../database/db.js');
 
 router.get('/register', (req, res) => {
     res.render('register.html');
 });
   
 router.post('/register', (req, res) => {
-    let json = fs.readFileSync(path.join(__dirname, '../data/users.json'));
-    let users = JSON.parse(json);
-
-    req.body.password = crypt(req.body.password);
-    users.push(req.body);
-    json = JSON.stringify(users);
-    fs.writeFileSync(path.join(__dirname, '../data/users.json'), json);
+    let db = DB.getDB();
+    db.run('INSERT INTO users (email, password) VALUES ($email, $password);', {
+        $password: crypt(req.body.password),
+        $email: req.body.email
+    });
     res.redirect('/');
 });
 
@@ -24,16 +23,15 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    let json = fs.readFileSync(path.join(__dirname, '../data/users.json'));
-    let users = JSON.parse(json);
-    let validUsers = users.filter(user => {
-        return user.email === req.body.email && check(req.body.password, user.password); 
+    let db = DB.getDB();
+    db.get('SELECT * FROM users WHERE email=?', req.body.email, (err, result) => {
+        
+        if(check(req.body.password, result.password)){
+            req.session.user = result;
+            req.session.save();
+        }
     });
-    if(validUsers.length){
-        req.session.user = {
-            email: validUsers[0].email
-        };
-    }
+   
     res.redirect('/');
 });
 

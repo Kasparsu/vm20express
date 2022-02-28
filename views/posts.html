@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
-    <a href="/posts/new" class="button is-primary">New post</a>
+    {% if req.session.user %}
+        <a href="/posts/new" class="button is-primary">New post</a>
+    {% endif %}
     {% for post in posts %}
         <div class="card mb-2">
             <header class="card-header">

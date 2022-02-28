@@ -33,6 +33,7 @@ app.use(session({secret: 'somecoolsecret'}));
 app.use((req, res, next) => {
   let engine = res.app.get('engine');
   engine.addGlobal('req', req);
+  console.log(req.session.user);
   next();
 });
 

@@ -3,7 +3,7 @@ let router  = express.Router();
 const path = require('path');
 const fs = require('fs');
 const DB = require('../database/db.js');
-const db = require('../database/db.js');
+const e = require('express');
 
 
 router.get('/posts', (req, res) => {
@@ -16,7 +16,12 @@ router.get('/posts', (req, res) => {
 });
   
 router.get('/posts/new', (req, res) => {
-    res.render('newpost.html'); 
+    if(req.session.user){
+        res.render('newpost.html'); 
+    } else {
+        res.redirect('/login');
+    }
+    
 });
   
 router.post('/posts/new', (req, res) => {
